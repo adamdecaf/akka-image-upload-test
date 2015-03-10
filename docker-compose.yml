@@ -1,0 +1,8 @@
+lb:
+  build: containers/lb/
+
+api1:
+  image: images-api:latest
+
+api2:
+  image: images-api:latest
