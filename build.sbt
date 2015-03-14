@@ -25,8 +25,6 @@ libraryDependencies ++= Seq(
 
   "org.scalaz" %% "scalaz-core" % "7.1.0",
 
-  "com.typesafe" % "config" % "1.3.0-M1",
-
   "com.amazonaws" % "aws-java-sdk-s3" % "1.9.22",
 
   "com.typesafe.akka" %% "akka-http-experimental" % "1.0-M4",
@@ -58,7 +56,7 @@ backln.Docker.settings ++ Seq(
 )
 
 buildInfoSettings ++ Seq(
-  buildInfoPackage := "backln",
+  buildInfoPackage := "images",
   sourceGenerators in Compile <+= buildInfo,
   buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
 )

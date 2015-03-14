@@ -6,6 +6,20 @@
   </head>
   <body>
 
+    <section>
+      <h2>Upload Images</h2>
+      Upload your images for free, for life. Without an account.
+      <hr />
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        Select image to upload:
+        <br />
+        <input type="file" name="file">
+        <br />
+        <input type="submit" value="Upload">
+      </form>
+      <hr />
+    </section>
+
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration scan="false" debug="false">
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <encoder>
+      <pattern>[%4p] [%d{ISO8601}] [%t] %c{1} %X{akkaSource}: %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="E" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/errors.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+    <encoder>
+      <pattern>[%4p] [%d{ISO8601}] [%t] %c{1} %X{akkaSource}: %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>./logs/errors.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="W" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/warn.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+    <encoder>
+      <pattern>[%4p] [%d{ISO8601}] [%t] %c{1} %X{akkaSource}: %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>./logs/warn.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="R" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>./logs/info.log</File>
+    <encoder>
+      <pattern>[%4p] [%d{ISO8601}] [%t] %c{1} %X{akkaSource}: %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>./logs/info.log.%d{yyyy-MM-dd-HH}.gz</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="async-stdout" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="stdout"/>
+    <queueSize>5120</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+  </appender>
+
+  <appender name="async-R" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="R"/>
+    <queueSize>5120</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+  </appender>
+
+  <appender name="async-E" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="E"/>
+    <queueSize>5120</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+  </appender>
+
+  <appender name="async-W" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="W"/>
+    <queueSize>5120</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="async-R"/>
+    <appender-ref ref="async-E"/>
+    <appender-ref ref="async-W"/>
+  </root>
+</configuration>
