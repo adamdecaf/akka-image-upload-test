@@ -1,7 +1,10 @@
 package images.social
-import java.util.{Base64 => JBase64}
+import javax.xml.bind.DatatypeConverter
 
 object Base64 {
-  final def apply(str: String): String = apply(str.getBytes("UTF-8"))
-  final def apply(arr: Array[Byte]): String = JBase64.getEncoder().encodeToString(arr)
+  def apply(bytes: Array[Byte]): String =
+    DatatypeConverter.printBase64Binary(bytes)
+
+  def apply(str: String): String =
+    apply(str.getBytes("UTF-8"))
 }
