@@ -52,7 +52,7 @@ scalacOptions in Test ++= Seq(
 )
 
 backln.Docker.settings ++ Seq(
-  baseImage in docker := "java:8"
+  baseImage in docker := "java:7"
 )
 
 buildInfoSettings ++ Seq(
