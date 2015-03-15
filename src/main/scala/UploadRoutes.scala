@@ -57,10 +57,12 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
         try {
           // Read one byte at a time, yea I know..
           Iterator.continually(chunks.read).takeWhile(_ != -1).foreach { chunk =>
+            println("read chunk")
             output.write(chunk)
           }
 
           val uploadFuture = Future {
+            println("Uploading ${fullFilename} to s3...")
             val result = S3Client.create.putItem(bucket, fullFilename, file)
             log.debug(s"Putting the file from ${fullFilename} result = ${result}.")
           }
