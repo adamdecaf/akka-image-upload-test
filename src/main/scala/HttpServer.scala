@@ -31,7 +31,7 @@ trait HttpServer extends Logging with WithConfig {
     val httpSink = Sink.foreach[Http.IncomingConnection] { conn => conn.flow.join(fullRoutes).run() }
     val bound = Http().bind(interface = interface, port = port).to(httpSink).run()
 
-    log.info(s"Bound to port ${port} for HTTP server.")
+    println(s"Bound to port ${port} for HTTP server.")
     bound
   }
 
@@ -49,7 +49,7 @@ trait HttpServer extends Logging with WithConfig {
   }
 
   def startHttpServer(): Unit = {
-    log.info("Starting HTTP server.")
+    println("Starting HTTP server.")
     binding
   }
 

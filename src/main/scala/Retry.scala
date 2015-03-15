@@ -23,16 +23,16 @@ trait Retry extends Logging {
           if (matches(result)) {
             Some(result)
           } else {
-            log.debug(s"Retrying action that gave result ${result} because it didn't match the predicate.")
+            println(s"Retrying action that gave result ${result} because it didn't match the predicate.")
             go(count - 1)
           }
         } catch {
           case err: Throwable if isIgnorableException(err) =>
-            log.debug(s"Retrying action because of caught and ignorable exception.", err)
+            println(s"Retrying action because of caught and ignorable exception.", err)
             go(count - 1)
 
           case err: Throwable =>
-            log.error(s"Got a fatal exception, exiting retry.", err)
+            println(s"Got a fatal exception, exiting retry.", err)
             None
         }
       }

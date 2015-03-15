@@ -31,7 +31,7 @@ final class S3Client(credentials: BasicAWSCredentials, clientConfig: ClientConfi
 
     def attempt(tries: Int = 0): Boolean = {
       if (tries >= maxRetries) {
-        log.warn(s"Giving up trying to put file from '${content.getAbsolutePath}' to s3 in bucket: '${bucket}' and key: '${key}'.")
+        println(s"Giving up trying to put file from '${content.getAbsolutePath}' to s3 in bucket: '${bucket}' and key: '${key}'.")
         false
       } else {
         try {
@@ -39,7 +39,7 @@ final class S3Client(credentials: BasicAWSCredentials, clientConfig: ClientConfi
           true
         } catch {
           case err: AmazonS3Exception =>
-            log.warn("Got an exception from S3 when putting an object scheduling for a retry.", err)
+            println("Got an exception from S3 when putting an object scheduling for a retry.", err)
             attempt(tries + 1)
         }
 
@@ -64,7 +64,7 @@ final class S3Client(credentials: BasicAWSCredentials, clientConfig: ClientConfi
 
       retryAction(reader).exists(_ == true)
     } else {
-      log.warn(s"Unable to put item '${key}' into bucket '${bucket}' before we can even wait until the read on it passes.")
+      println(s"Unable to put item '${key}' into bucket '${bucket}' before we can even wait until the read on it passes.")
       false
     }
   }
@@ -84,7 +84,7 @@ object WithS3Object extends Logging {
 
     def attempt(tries: Int = 0): Option[T] = {
       if (tries >= maxRetries) {
-        log.warn(s"Giving up trying to s3 S3Object under bucket: '${bucket}' and key: '${key}' due to too many retries.")
+        println(s"Giving up trying to s3 S3Object under bucket: '${bucket}' and key: '${key}' due to too many retries.")
         None
       } else {
         try {
@@ -95,10 +95,10 @@ object WithS3Object extends Logging {
         } catch {
           case err: AmazonS3Exception =>
             if (err.getMessage.contains("The specified key does not exist")) {
-              log.debug(s"The object under '${key}' in bucket '${bucket}' doesn't exist.")
+              println(s"The object under '${key}' in bucket '${bucket}' doesn't exist.")
               None
             } else {
-              log.warn("Got an exception from S3 when reading an object scheduling for a retry.", err)
+              println("Got an exception from S3 when reading an object scheduling for a retry.", err)
               attempt(tries + 1)
             }
         }
