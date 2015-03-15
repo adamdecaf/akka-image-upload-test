@@ -8,6 +8,7 @@ import java.io.File
 import java.io.ByteArrayInputStream
 import java.io.FileOutputStream
 import java.io.FileNotFoundException
+import javax.imageio.ImageIO
 import scala.concurrent.Promise
 import scala.concurrent.ExecutionContext.global
 
@@ -61,20 +62,23 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
             output.write(chunk)
           }
 
-          println(s"Uploading ${fullFilename} to s3...")
-
-          val result = {
-            val client = try {
-              S3Client.create
-            } catch {
-              case err: Throwable =>
-                err.printStackTrace
-                throw err
+          if (ImageIO.read(file) != null) {
+            println(s"Uploading ${fullFilename} to s3...")
+            val result = {
+              val client = try {
+                S3Client.create
+              } catch {
+                case err: Throwable =>
+                  err.printStackTrace
+                  throw err
+              }
+              client.putItem(bucket, s"images/${fullFilename}", file)
             }
-            client.putItem(bucket, s"images/${fullFilename}", file)
+            println(s"Putting the file from ${fullFilename} result = ${result}.")
+          } else {
+            println(s"File ${file.getAbsolutePath} is not an image, ignoring")
+            return None
           }
-
-          println(s"Putting the file from ${fullFilename} result = ${result}.")
 
         } catch {
           case err: FileNotFoundException =>
