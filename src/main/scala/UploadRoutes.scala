@@ -62,12 +62,24 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
           }
 
           println(s"Uploading ${fullFilename} to s3...")
-          val result = S3Client.create.putItem(bucket, s"images/${fullFilename}", file)
+
+          val result = {
+            val client = try {
+              S3Client.create
+            } catch {
+              case err: Throwable =>
+                err.printStackTrace
+                throw err
+            }
+            client.putItem(bucket, s"images/${fullFilename}", file)
+          }
+
           println(s"Putting the file from ${fullFilename} result = ${result}.")
 
         } catch {
           case err: FileNotFoundException =>
-            println(s"Can't find file ${fullFilename}", err)
+            println(s"Can't find file ${fullFilename}")
+            err.printStackTrace
         } finally {
           output.flush()
           output.close()
