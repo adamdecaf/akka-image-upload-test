@@ -85,7 +85,7 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
           output.close()
         }
       }
-      Some(Uri(s"/?filename${fullFilename}"))
+      Some(Uri(s"/?filename=${fullFilename}"))
     } else {
       None
     }
