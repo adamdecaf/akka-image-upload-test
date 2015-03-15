@@ -61,7 +61,7 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
             output.write(chunk)
           }
 
-          println("Uploading ${fullFilename} to s3...")
+          println(s"Uploading ${fullFilename} to s3...")
           val result = S3Client.create.putItem(bucket, fullFilename, file)
           log.debug(s"Putting the file from ${fullFilename} result = ${result}.")
 
