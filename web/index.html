@@ -18,7 +18,35 @@
         <input type="submit" value="Upload">
       </form>
       <hr />
+      <div id="uploaded" style="display:none;">
+        <strong>Uploaded Image</strong>
+        <input type="text" id="uploaded-input" value="" />
+      </div>
     </section>
+
+    <script>
+      var getParams = function () {
+      var params = {};
+      if (location.search) {
+        var parts = location.search.slice(1).split('&');
+        parts.forEach(function (part) {
+          var pair = part.split('=');
+          pair[0] = decodeURIComponent(pair[0]);
+          pair[1] = decodeURIComponent(pair[1]);
+          params[pair[0]] = (pair[1] !== 'undefined') ?
+            pair[1] : true;
+          });
+        }
+        return params;
+      }
+      var filename = getParams['filename'];
+      if (filename) {
+        var container = document.querySelector("#uploaded");
+        var input = document.querySelector("#uploaded-input");
+        container.style.display = 'block';
+        input.value = location.protocol + "//" + location.hostname + "/images/" + filename;
+      }
+    </script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
