@@ -39,12 +39,14 @@
           }
         return params;
       }
-      var filename = getParams()['filename'];
-      if (filename) {
-        var container = document.querySelector("#uploaded");
-        var input = document.querySelector("#uploaded-input");
-        container.style.display = 'block';
-        input.value = location.protocol + "//" + location.hostname + "/images/" + filename;
+      window.onload = function() {
+        var filename = getParams()['filename'];
+        if (filename) {
+          var container = document.querySelector("#uploaded");
+          var input = document.querySelector("#uploaded-input");
+          container.style.display = 'block';
+          input.value = location.protocol + "//" + location.hostname + "/images/" + filename;
+        }
       }
     </script>
 
