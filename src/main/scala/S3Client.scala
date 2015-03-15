@@ -28,8 +28,10 @@ final class S3Client(credentials: BasicAWSCredentials, clientConfig: ClientConfi
 
   def putItem(bucket: String, key: String, content: File): Boolean = {
     val req = new PutObjectRequest(bucket, key, content)
+    println(s"Trying to put item under key ${key} and file ${content.getAbsolutePath} into bucket ${bucket}.")
 
     def attempt(tries: Int = 0): Boolean = {
+      println(s"attempt ${tries} of putting object ${key} into ${bucket}")
       if (tries >= maxRetries) {
         println(s"Giving up trying to put file from '${content.getAbsolutePath}' to s3 in bucket: '${bucket}' and key: '${key}'.")
         false
@@ -39,7 +41,8 @@ final class S3Client(credentials: BasicAWSCredentials, clientConfig: ClientConfi
           true
         } catch {
           case err: AmazonS3Exception =>
-            println("Got an exception from S3 when putting an object scheduling for a retry.", err)
+            println(s"Got an exception from S3 when putting an object scheduling for a retry.")
+            err.printStackTrace
             attempt(tries + 1)
         }
 
@@ -98,7 +101,8 @@ object WithS3Object extends Logging {
               println(s"The object under '${key}' in bucket '${bucket}' doesn't exist.")
               None
             } else {
-              println("Got an exception from S3 when reading an object scheduling for a retry.", err)
+              println(s"Got an exception from S3 when reading an object scheduling for a retry.")
+              err.printStackTrace
               attempt(tries + 1)
             }
         }
