@@ -40,7 +40,7 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
   private[this] def uploadPart(part: Multipart.FormData.BodyPart): Option[Uri] = {
     val originalFilename = part.headers.find { h =>
       h.is("content-disposition")
-    } map (_.value.split("filename=").last) getOrElse "Unknown"
+    } map (_.value.split("filename=").last.takeWhile(_ != ';')) getOrElse "Unknown"
 
     println(s"originalFilename = ${originalFilename}")
 
