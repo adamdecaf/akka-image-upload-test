@@ -47,7 +47,9 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
     val filename = SHA256(Uuid()).take(8)
     // val extension = originalFilename.dropWhile(_ != '.').takeWhile(_ != ';')
     val extension = originalFilename.split('.').last
-    val fullFilename = s"${filename}${extension}"
+    val fullFilename = s"${filename}.${extension}"
+
+    println(s"fullFilename = ${fullFilename}")
 
     // todo: check other parts of the entity
     if (!part.entity.isKnownEmpty) {
