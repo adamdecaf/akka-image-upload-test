@@ -42,6 +42,8 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
       h.is("content-disposition")
     } map (_.value.split("filename=").last) getOrElse "Unknown"
 
+    println(s"originalFilename = ${originalFilename}")
+
     val filename = SHA256(Uuid()).take(8)
     // val extension = originalFilename.dropWhile(_ != '.').takeWhile(_ != ';')
     val extension = originalFilename.split('.').last
