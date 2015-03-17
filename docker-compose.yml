@@ -12,6 +12,8 @@ api1:
     - "8080:8080"
   environment:
     HTTP_PORT: 8080
+  volumes:
+    - /app/logs:/var/api1
 
 api2:
   image: backln/images.social:1-SNAPSHOT
@@ -19,3 +21,5 @@ api2:
     - "8090:8090"
   environment:
     HTTP_PORT: 8090
+  volumes:
+    - /app/logs:/var/api2
