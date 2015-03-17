@@ -53,13 +53,13 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
 
     // todo: check other parts of the entity
     if (!part.entity.isKnownEmpty) {
-      val file = new File(fullFilename)
-      val output = new FileOutputStream(file)
-
       try {
         part.entity.dataBytes.runForeach { byteString =>
           val contentType = part.entity.contentType
           val chunks = new ByteArrayInputStream(byteString.toArray)
+
+          val file = new File(fullFilename)
+          val output = new FileOutputStream(file)
 
           try {
             // Read one byte at a time, yea I know..
@@ -90,15 +90,15 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
             case err: FileNotFoundException =>
               println(s"Can't find file ${fullFilename}")
               err.printStackTrace
+          }  finally {
+            output.flush()
+            output.close()
           }
         }
       } catch {
         case err: Throwable =>
           println(s"Found error: ${err}")
           err.printStackTrace
-      } finally {
-        output.flush()
-        output.close()
       }
       Some(Uri(s"/?filename=${fullFilename}"))
     } else {
