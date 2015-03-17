@@ -92,6 +92,10 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
               err.printStackTrace
           }
         }
+      } catch {
+        case err: Throwable =>
+          println(s"Found error: ${err}")
+          err.printStackTrace
       } finally {
         output.flush()
         output.close()
