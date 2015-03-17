@@ -26,6 +26,7 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
       val promise = Promise[Uri]()
 
       formData.parts.take(1).runForeach { part =>
+        println("part")
         val maybeUri = uploadPart(part)
         maybeUri.fold(promise.failure(new Throwable{}))(uri => promise.success(uri))
       }
@@ -59,6 +60,8 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
       part.entity.dataBytes.runForeach { byteString =>
         val contentType = part.entity.contentType
         val chunks = new ByteArrayInputStream(byteString.toArray)
+
+        println("byteString")
 
         try {
           // Read one byte at a time, yea I know..
