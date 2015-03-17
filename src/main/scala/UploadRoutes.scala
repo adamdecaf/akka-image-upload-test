@@ -53,52 +53,46 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
 
     // todo: check other parts of the entity
     if (!part.entity.isKnownEmpty) {
-      try {
-        part.entity.dataBytes.runForeach { byteString =>
-          val contentType = part.entity.contentType
-          val chunks = new ByteArrayInputStream(byteString.toArray)
+      val file = new File(fullFilename)
+      val output = new FileOutputStream(file)
 
-          val file = new File(fullFilename)
-          val output = new FileOutputStream(file)
+      part.entity.dataBytes.runForeach { byteString =>
+        val contentType = part.entity.contentType
+        val chunks = new ByteArrayInputStream(byteString.toArray)
 
-          try {
-            // Read one byte at a time, yea I know..
-            Iterator.continually(chunks.read).takeWhile(_ != -1).foreach { chunk =>
-              // println("read chunk")
-              output.write(chunk)
-            }
-
-            if (ImageIO.read(file) != null) {
-              println(s"Uploading ${fullFilename} to s3...")
-              val result = {
-                val client = try {
-                  S3Client.create
-                } catch {
-                  case err: Throwable =>
-                    err.printStackTrace
-                    throw err
-                }
-                client.putItem(bucket, s"images/${fullFilename}", file)
-              }
-              println(s"Putting the file from ${fullFilename} result = ${result}.")
-            } else {
-              println(s"File ${file.getAbsolutePath} is not an image, ignoring")
-              return None
-            }
-
-          } catch {
-            case err: FileNotFoundException =>
-              println(s"Can't find file ${fullFilename}")
-              err.printStackTrace
-          }  finally {
-            output.flush()
-            output.close()
+        try {
+          // Read one byte at a time, yea I know..
+          Iterator.continually(chunks.read).takeWhile(_ != -1).foreach { chunk =>
+            // println("read chunk")
+            output.write(chunk)
           }
+
+          if (ImageIO.read(file) != null) {
+            println(s"Uploading ${fullFilename} to s3...")
+            val result = {
+              val client = try {
+                S3Client.create
+              } catch {
+                case err: Throwable =>
+                  err.printStackTrace
+                  throw err
+              }
+              client.putItem(bucket, s"images/${fullFilename}", file)
+            }
+            println(s"Putting the file from ${fullFilename} result = ${result}.")
+          } else {
+            println(s"File ${file.getAbsolutePath} is not an image, ignoring")
+            return None
+          }
+
+        } catch {
+          case err: FileNotFoundException =>
+            println(s"Can't find file ${fullFilename}")
+            err.printStackTrace
+        } finally {
+          output.flush()
+          output.close()
         }
-      } catch {
-        case err: Throwable =>
-          println(s"Found error: ${err}")
-          err.printStackTrace
       }
       Some(Uri(s"/?filename=${fullFilename}"))
     } else {
