@@ -53,12 +53,12 @@ trait UploadRoutes extends HttpDirectives with JsonMarshalling with Logging {
 
     // todo: check other parts of the entity
     if (!part.entity.isKnownEmpty) {
+      val file = new File(fullFilename)
+      val output = new FileOutputStream(file)
+
       part.entity.dataBytes.runForeach { byteString =>
         val contentType = part.entity.contentType
-
         val chunks = new ByteArrayInputStream(byteString.toArray)
-        val file = new File(fullFilename)
-        val output = new FileOutputStream(file)
 
         try {
           // Read one byte at a time, yea I know..
