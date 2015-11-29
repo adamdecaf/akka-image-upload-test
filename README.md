@@ -1,4 +1,4 @@
-# images.social
+# akka-image-upload-test
 
 > THIS WAS AN EXPERIMENT
 
